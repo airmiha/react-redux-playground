@@ -1,0 +1,13 @@
+/*A random CSS file with errors to test linting */
+
+.no-space-after-colon {
+    display: block;
+}
+
+.no-semicolon {
+  position: relative
+}
+
+.invalid-hex {
+  color: #FFF00G;
+}

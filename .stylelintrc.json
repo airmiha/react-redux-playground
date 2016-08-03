@@ -1,0 +1,6 @@
+{
+  "extends": "stylelint-config-standard",
+  "rules": {
+    "media-query-parentheses-space-inside": null
+  }
+}

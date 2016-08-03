@@ -1,0 +1,15 @@
+{    
+    "parser": "babel-eslint",
+    "extends": "airbnb",
+    "plugins": [
+        "react"
+    ],
+     "ecmaFeatures": {
+        "jsx": true
+    },
+    "rules": {
+        "indent": [2, 2],      
+        "react/jsx-indent": [2, 2],
+        "max-len": [2, 120]
+    }
+}
