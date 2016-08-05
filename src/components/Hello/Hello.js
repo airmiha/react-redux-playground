@@ -1,8 +1,9 @@
 import React, { PropTypes } from 'react';
+import style from './Hello.css';
 
 const { string, func } = PropTypes;
 
-function Hello({ word = 'friend (click here to change name)', mode = 'display', actions: { setMode, setWord } }) {
+const Hello = ({ word = 'friend (click here to change name)', mode = 'display', setMode, setWord }) => {
   const styles = {
     displayMode: { display: mode === 'display' && 'inline' || 'none' },
     editMode: { display: mode === 'edit' && 'inline' || 'none' },
@@ -17,20 +18,18 @@ function Hello({ word = 'friend (click here to change name)', mode = 'display', 
   };
 
   return (
-    <p>Hello,&nbsp;
+    <p className={style.container}>Hello,&nbsp;
       <span style={styles.displayMode} onClick={() => setMode('edit')}>{word}!</span>
       <input style={styles.editMode} onKeyUp={onKeyUp} />
     </p>
   );
-}
+};
 
 Hello.propTypes = {
   word: string,
   mode: string,
-  actions: PropTypes.shape({
-    setWord: func,
-    setMode: func,
-  }),
+  setWord: func,
+  setMode: func,
 };
 
 export default Hello;

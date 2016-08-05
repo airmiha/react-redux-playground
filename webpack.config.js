@@ -10,6 +10,12 @@ const resolve = path.resolve;
 const root = resolve(__dirname);
 const src = join(root, 'src');
 
+const NODE_ENV = process.env.NODE_ENV;
+const isDev  = NODE_ENV !== 'development';
+const isTest = NODE_ENV === 'test';
+
+const cssModulesNames = `${isDev && '[path][name]__[local]__' || ''}[hash:base64:5]`;
+
 module.exports = {
   entry: [
     'webpack-dev-server/client?http://localhost:8080',
@@ -33,20 +39,31 @@ module.exports = {
     loaders: [
       {
         test: /\.css$/,       
-        loader: 'style-loader!css-loader!postcss-loader'
+        loader: `style-loader!css-loader?modules&localIdentName=${cssModulesNames}!postcss-loader`
       },  
       {
         test: /\.jsx?$/,
         exclude: /node_modules/,
         loaders: ['babel-loader', 'eslint-loader']
+      },
+      {
+        test: /\.json$/,
+        loader: 'json'
       }
+    ],
+    postLoaders: [ 
+      {
+        test: /\.js$/,   
+        exclude: /node_modules/,    
+        loader: 'istanbul-instrumenter'
+      } 
     ]
   },
   plugins: [
     new styleLintPlugin({
       configFile: '.stylelintrc.json', 
       failOnError: false, 
-      files: '**/**/*.css',
+      files: 'src/**/**/*.css',
       context: root,
     }),
   ],
@@ -54,8 +71,9 @@ module.exports = {
     return [precss, autoprefixer]   
   },
   resolve: {
-    extensions: ['', '.js', '.jsx']
+    extensions: ['', '.js', '.jsx', '.json']
   },
+  
   externals: {
     'react/addons': true,
     'react/lib/ExecutionEnvironment': true,

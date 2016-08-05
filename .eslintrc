@@ -4,6 +4,9 @@
     "plugins": [
         "react"
     ],
+    "env": {
+        "mocha": true
+    },
      "ecmaFeatures": {
         "jsx": true
     },
