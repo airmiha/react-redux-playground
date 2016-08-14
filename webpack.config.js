@@ -1,7 +1,7 @@
-var webpack = require('webpack');
-var precss =  require('precss');
-var autoprefixer =  require('autoprefixer');
-var styleLintPlugin = require('stylelint-webpack-plugin');
+const webpack = require('webpack');
+const precss =  require('precss');
+const autoprefixer =  require('autoprefixer');
+const styleLintPlugin = require('stylelint-webpack-plugin');
 
 const path = require('path');
 const join = path.join;
@@ -11,16 +11,38 @@ const root = resolve(__dirname);
 const src = join(root, 'src');
 
 const NODE_ENV = process.env.NODE_ENV;
-const isDev  = NODE_ENV !== 'development';
+const isProduction  = NODE_ENV === 'production';
+const isDev  = NODE_ENV === 'development';
 const isTest = NODE_ENV === 'test';
 
 const cssModulesNames = `${isDev && '[path][name]__[local]__' || ''}[hash:base64:5]`;
 
+const productionPlugins = [
+  new webpack.optimize.DedupePlugin(),
+  new webpack.optimize.OccurrenceOrderPlugin(),
+  new webpack.optimize.UglifyJsPlugin({
+    compress: {
+      warnings: false
+    }
+  })
+]; 
+
+const developmentPlugins = [
+  new styleLintPlugin({
+    configFile: '.stylelintrc.json', 
+    failOnError: false, 
+    files: 'src/**/**/*.css',
+    context: root,
+  }),
+  new webpack.optimize.OccurenceOrderPlugin(),
+  new webpack.HotModuleReplacementPlugin(),
+  new webpack.NoErrorsPlugin()
+];
+
 module.exports = {
   entry: [
-    'webpack-dev-server/client?http://localhost:8080',
-    'webpack/hot/only-dev-server',
-    'react-hot-loader/patch',
+    'react-hot-loader/patch',  
+    'webpack-hot-middleware/client',  
     './src/index.js'
   ],
   output: {
@@ -30,7 +52,6 @@ module.exports = {
   },
   devServer: {
     contentBase: './dist',
-    hot: true
   },
   eslint: {
     configFile: './.eslintrc'
@@ -59,14 +80,8 @@ module.exports = {
       } 
     ]
   },
-  plugins: [
-    new styleLintPlugin({
-      configFile: '.stylelintrc.json', 
-      failOnError: false, 
-      files: 'src/**/**/*.css',
-      context: root,
-    }),
-  ],
+  plugins: isProduction && productionPlugins || isDev && developmentPlugins || [],
+  
   postcss() {
     return [precss, autoprefixer]   
   },

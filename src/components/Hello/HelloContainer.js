@@ -1,8 +1,13 @@
-import React from 'react';
+import React, { PropTypes } from 'react';
 import Hello from './Hello';
+import NavLink from '../NavLink/NavLink.js';
 
 /* eslint  react/prefer-es6-class: "off" */
 const HelloContainer = React.createClass({
+  propTypes: {
+    children: PropTypes.object,
+  },
+
   getInitialState() {
     return {};
   },
@@ -17,7 +22,17 @@ const HelloContainer = React.createClass({
 
   render() {
     return (
-      <Hello word={this.state.word} mode={this.state.mode} setMode={this.setMode} setWord={this.setWord} />
+      <div>
+        <h1>React Router Tutorial</h1>
+        <ul>
+          <li><NavLink to="/" onlyActiveOnIndex>Home</NavLink></li>
+          <li><NavLink to="/about">About</NavLink></li>
+          <li><NavLink to="/repos">Repos</NavLink></li>
+          <li><NavLink to="/soundcloud">Soundcloud</NavLink></li>
+        </ul>
+        {this.props.children}
+        <Hello word={this.state.word} mode={this.state.mode} setMode={this.setMode} setWord={this.setWord} />
+      </div>
     );
   },
 });
